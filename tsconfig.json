@@ -59,6 +59,7 @@
   },
   "files": [
     "src/Utils.ts",
+    "src/GameCore.ts",
     "src/GameObjects.ts",
     "src/main.ts"
   ]

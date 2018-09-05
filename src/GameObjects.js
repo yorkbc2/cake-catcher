@@ -45,6 +45,7 @@ var PlayerGameObject = /** @class */ (function (_super) {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.isInJumping = false;
         _this.sj = _this.s + 6;
+        _this.onPlatform = false;
         return _this;
     }
     PlayerGameObject.prototype.render = function () {
@@ -67,7 +68,7 @@ var PlayerGameObject = /** @class */ (function (_super) {
             this.isInJumping = true;
             var j = setInterval(function () {
                 _this.y -= _this.sj;
-                if (_this.y <= oldY - 120) {
+                if (_this.y <= oldY - 200) {
                     _this.down();
                     clearInterval(j);
                 }
@@ -93,8 +94,14 @@ var PlayerGameObject = /** @class */ (function (_super) {
                         this.x -= this.s;
                     break;
                 case 2:
-                    if (this.y <= canvas.height - 100)
+                    if (collisionDetectionBottom(this, ground) === false
+                        && collisionDetectionBottom(this, platforms[0]) === false) {
                         this.y += this.s;
+                        this.onPlatform = false;
+                    }
+                    else {
+                        this.onPlatform = true;
+                    }
                     break;
                 case 3:
                     this.jump();

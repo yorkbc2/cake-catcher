@@ -50,6 +50,7 @@ class GameObject implements IGameObject {
 class PlayerGameObject extends GameObject {
     isInJumping:boolean = false;
     sj: number = this.s + 6;
+    onPlatform: boolean = false;
     render() {
         this.move();
         context.drawImage(this.sprite, this.x, this.y, this.w, this.h);
@@ -69,7 +70,7 @@ class PlayerGameObject extends GameObject {
             this.isInJumping = true;
             var j = setInterval(() => {
                 this.y -= this.sj;
-                if (this.y <= oldY - 120) {
+                if (this.y <= oldY - 200) {
                     this.down();
                     clearInterval(j);
                 }
@@ -93,9 +94,15 @@ class PlayerGameObject extends GameObject {
                     if (this.x >= 0)
                         this.x -= this.s;
                     break;
-                case 2: 
-                    if (this.y  <= canvas.height - 100)                
+                case 2:
+                    if (collisionDetectionBottom(this, ground)===false
+                    && collisionDetectionBottom(this, platforms[0])===false) {
                         this.y += this.s;
+                        this.onPlatform = false;
+                    }
+                    else {
+                        this.onPlatform = true;
+                    }
                     break;
                 case 3: 
                     this.jump();
