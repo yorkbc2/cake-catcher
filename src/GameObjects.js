@@ -21,18 +21,25 @@ var GameObject = /** @class */ (function () {
         this.s = 8;
         this.d = 0;
         this.m = false;
-        this.sprite = null;
+        this.sprite = new Image();
+        this.generalSprite = new Image();
+        this.reversedSprite = new Image();
+        this.transformed = false;
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
     }
-    GameObject.prototype.setSprite = function (spriteUrl) {
-        var img = new Image();
-        img.src = spriteUrl;
-        img.width = this.w;
-        img.height = this.h;
-        this.sprite = img;
+    GameObject.prototype.setSprite = function (spriteUrl, reversedSprite) {
+        if (reversedSprite === void 0) { reversedSprite = ""; }
+        this.sprite = this.generalSprite = createSprite(spriteUrl, this.w, this.h);
+        this.reversedSprite = createSprite((reversedSprite || spriteUrl), this.w, this.h);
+    };
+    GameObject.prototype.getSprite = function () {
+        if (this.transformed === true) {
+            return this.reversedSprite;
+        }
+        return this.generalSprite;
     };
     GameObject.prototype.render = function () {
         context.drawImage(this.sprite, this.x, this.y, this.w, this.h);
@@ -49,8 +56,25 @@ var PlayerGameObject = /** @class */ (function (_super) {
         return _this;
     }
     PlayerGameObject.prototype.render = function () {
+        var _this = this;
+        if ((typeof platforms.filter(function (p) { return (collisionDetectionBottom(_this, p) === true); })[0] !== 'undefined') ||
+            collisionDetectionBottom(this, ground)) {
+            this.onPlatform = true;
+        }
+        else {
+            this.onPlatform = false;
+        }
+        if (this.onPlatform === false && this.isInJumping === false) {
+            this.y += this.sj;
+        }
         this.move();
-        context.drawImage(this.sprite, this.x, this.y, this.w, this.h);
+        if (this.d === 1 && this.transformed === false) {
+            this.transformed = true;
+        }
+        else if (this.d === 0) {
+            this.transformed = false;
+        }
+        context.drawImage(this.getSprite(), this.x, this.y, this.w, this.h);
     };
     PlayerGameObject.prototype.startToMove = function () {
         this.m = true;
@@ -79,10 +103,12 @@ var PlayerGameObject = /** @class */ (function (_super) {
         var _this = this;
         var oldY = this.y;
         var j = setInterval(function () {
-            _this.y += _this.sj;
-            if (_this.y >= canvas.height - 100) {
-                _this.isInJumping = false;
+            if (_this.onPlatform === true) {
                 clearInterval(j);
+                _this.isInJumping = false;
+            }
+            else {
+                _this.y += _this.sj;
             }
         }, 1000 / 60);
     };
@@ -94,14 +120,7 @@ var PlayerGameObject = /** @class */ (function (_super) {
                         this.x -= this.s;
                     break;
                 case 2:
-                    if (collisionDetectionBottom(this, ground) === false
-                        && collisionDetectionBottom(this, platforms[0]) === false) {
-                        this.y += this.s;
-                        this.onPlatform = false;
-                    }
-                    else {
-                        this.onPlatform = true;
-                    }
+                    this.y += this.sj;
                     break;
                 case 3:
                     this.jump();

@@ -1,3 +1,4 @@
+declare var context: CanvasRenderingContext2D;
 interface IGameCore {
    scores: number;
    hearts: number;
@@ -18,6 +19,12 @@ class GameCore implements IGameCore{
     incrementScores() {
         this.scores += 1;
         return this;
+    }
+
+    drawScores() {
+        context.fillStyle = "#fff";
+        context.font = "normal 24px Calibri";
+        context.fillText('Scores: ' + this.scores, 10, 40);
     }
 
     endGame() {}

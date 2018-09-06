@@ -5,9 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Cake Catcher 2D</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        nav {
+            padding: 10px 15px;
+            display: flex;
+            position: relative;
+            box-shadow: 0px 0px 12px rgba(0,0,0,0.35);
+        }
+        nav h4 {
+            margin: 0;
+            padding: 0;
+            font-size: 48px;
+        }
+
+        nav ul {
+            margin: 23px;
+            padding: 0;
+            display: flex;
+        }
+
+        nav ul li a {
+            color: #000;
+            font-size: 18px;
+        }
+
+        nav ul li {
+            padding: 0 10px;
+            list-style: none;
+        }
+    </style>
 </head>
 <body>
     <div id="root">
+        <nav>
+            <h4>
+                CakeCatcher
+            </h4>
+            <ul>
+                <li><a href="#">Донат</a></li>
+            </ul>
+        </nav>
         <canvas id="game" width="640" height="400" style="border: 1px solid #000;"></canvas>
     </div>
     <script src="src/Utils.js"></script>

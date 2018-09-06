@@ -1,4 +1,4 @@
-declare var context: CanvasRenderingContext2D|any;
+declare var context: CanvasRenderingContext2D;
 
 interface IGameObject {
     x: number;
@@ -25,7 +25,10 @@ class GameObject implements IGameObject {
     d: number = 0;
     m: boolean = false;
 
-    sprite: HTMLImageElement|null = null;
+    sprite: HTMLImageElement = new Image();
+    generalSprite: HTMLImageElement = new Image();
+    reversedSprite: HTMLImageElement = new Image();
+    transformed: boolean = false;
 
     constructor(x:number ,y:number ,w:number ,h:number) {
         this.x = x;
@@ -34,12 +37,16 @@ class GameObject implements IGameObject {
         this.h = h;
     }
 
-    setSprite(spriteUrl: string) {
-        var img = new Image();
-        img.src = spriteUrl;
-        img.width = this.w;
-        img.height = this.h;
-        this.sprite = img;
+    setSprite(spriteUrl: string, reversedSprite: string = "") {
+        this.sprite = this.generalSprite = createSprite(spriteUrl, this.w, this.h);
+        this.reversedSprite = createSprite((reversedSprite||spriteUrl), this.w, this.h);
+    }
+
+    getSprite() {
+        if (this.transformed === true) {
+            return this.reversedSprite;
+        }
+        return this.generalSprite;
     }
 
     render() {
@@ -51,9 +58,28 @@ class PlayerGameObject extends GameObject {
     isInJumping:boolean = false;
     sj: number = this.s + 6;
     onPlatform: boolean = false;
+
     render() {
+        
+
+        if ((typeof platforms.filter(p => (
+            collisionDetectionBottom(this, p) === true
+        ))[0] !== 'undefined') ||
+            collisionDetectionBottom(this, ground)) {
+            this.onPlatform = true;
+        } else {
+            this.onPlatform = false;
+        }
+        if (this.onPlatform === false && this.isInJumping === false) {
+            this.y += this.sj;
+        }
         this.move();
-        context.drawImage(this.sprite, this.x, this.y, this.w, this.h);
+        if (this.d === 1 && this.transformed === false) {
+            this.transformed = true;
+        } else if (this.d === 0) {
+            this.transformed = false;
+        }
+        context.drawImage(this.getSprite(), this.x, this.y, this.w, this.h);
     }
     startToMove() {
         this.m = true;
@@ -80,10 +106,11 @@ class PlayerGameObject extends GameObject {
     down() {
         var oldY = this.y;
         var j = setInterval(() => {
-            this.y += this.sj;
-            if (this.y >= canvas.height - 100) {
+            if (this.onPlatform === true) {
+                clearInterval(j)
                 this.isInJumping = false;
-                clearInterval(j);
+            } else {
+                this.y += this.sj;
             }
         }, 1000/60);
     }
@@ -95,14 +122,7 @@ class PlayerGameObject extends GameObject {
                         this.x -= this.s;
                     break;
                 case 2:
-                    if (collisionDetectionBottom(this, ground)===false
-                    && collisionDetectionBottom(this, platforms[0])===false) {
-                        this.y += this.s;
-                        this.onPlatform = false;
-                    }
-                    else {
-                        this.onPlatform = true;
-                    }
+                    this.y += this.sj;
                     break;
                 case 3: 
                     this.jump();

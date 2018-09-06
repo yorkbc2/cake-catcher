@@ -15,6 +15,11 @@ var GameCore = /** @class */ (function () {
         this.scores += 1;
         return this;
     };
+    GameCore.prototype.drawScores = function () {
+        context.fillStyle = "#fff";
+        context.font = "normal 24px Calibri";
+        context.fillText('Scores: ' + this.scores, 10, 40);
+    };
     GameCore.prototype.endGame = function () { };
     GameCore.prototype.setLoop = function (loop) {
         this.loop = loop;
