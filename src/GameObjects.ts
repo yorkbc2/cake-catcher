@@ -30,11 +30,14 @@ class GameObject implements IGameObject {
     reversedSprite: HTMLImageElement = new Image();
     transformed: boolean = false;
 
-    constructor(x:number ,y:number ,w:number ,h:number) {
+    constructor(x:number ,y:number ,w:number ,h:number, sprite?: string) {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
+        if (typeof sprite === 'string') {
+            this.setSprite(sprite);
+        }
     }
 
     setSprite(spriteUrl: string, reversedSprite: string = "") {
@@ -121,9 +124,6 @@ class PlayerGameObject extends GameObject {
                     if (this.x >= 0)
                         this.x -= this.s;
                     break;
-                case 2:
-                    this.y += this.sj;
-                    break;
                 case 3: 
                     this.jump();
                     break; 
@@ -133,5 +133,61 @@ class PlayerGameObject extends GameObject {
                     break;
             }
         }
+    }
+
+    slow(timeout:number) {
+        var oldS = 8;
+        var oldSJ = 14;
+        this.s -= this.s/2;
+        this.sj -= this.sj/2;
+        setTimeout(() => {
+            this.s = oldS;
+            this.sj = oldSJ;
+        }, timeout);
+    }
+}
+
+class CakeGameObject extends GameObject {
+    render() {
+        if (collisionDetection(player, this)) {
+            this.remove();
+        }
+        if (this.y >= canvas.height) {
+            this.destroy();
+        }
+        this.y += 3;
+        context.drawImage(this.getSprite(), this.x, this.y, this.w, this.h);
+    }
+    remove() {
+        playAudioById(cakeAudioElements[randomX(cakeAudioElements.length)]);
+        game.incrementScores();
+        this.destroy();
+    }
+    destroy() {
+        subjects.splice(subjects.indexOf(this), 1);
+    }
+}
+
+class TimerGameObject extends CakeGameObject {
+    render() {
+        if (collisionDetection(player, this)) {
+            this.remove();
+        }
+        if (this.y >= canvas.height) {
+            this.destroy();
+        }
+        this.y += 3;
+        context.drawImage(this.getSprite(), this.x, this.y, this.w, this.h);
+    }
+    remove() {
+        player.slow(3000);
+        playAudioById('oh');
+        this.destroy();
+    }
+}
+
+class BombGameObject extends GameObject {
+    render() {
+        
     }
 }

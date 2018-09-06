@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 var GameObject = /** @class */ (function () {
-    function GameObject(x, y, w, h) {
+    function GameObject(x, y, w, h, sprite) {
         this.x = 0;
         this.y = 0;
         this.w = 0;
@@ -29,6 +29,9 @@ var GameObject = /** @class */ (function () {
         this.y = y;
         this.w = w;
         this.h = h;
+        if (typeof sprite === 'string') {
+            this.setSprite(sprite);
+        }
     }
     GameObject.prototype.setSprite = function (spriteUrl, reversedSprite) {
         if (reversedSprite === void 0) { reversedSprite = ""; }
@@ -119,9 +122,6 @@ var PlayerGameObject = /** @class */ (function (_super) {
                     if (this.x >= 0)
                         this.x -= this.s;
                     break;
-                case 2:
-                    this.y += this.sj;
-                    break;
                 case 3:
                     this.jump();
                     break;
@@ -132,5 +132,72 @@ var PlayerGameObject = /** @class */ (function (_super) {
             }
         }
     };
+    PlayerGameObject.prototype.slow = function (timeout) {
+        var _this = this;
+        var oldS = 8;
+        var oldSJ = 14;
+        this.s -= this.s / 2;
+        this.sj -= this.sj / 2;
+        setTimeout(function () {
+            _this.s = oldS;
+            _this.sj = oldSJ;
+        }, timeout);
+    };
     return PlayerGameObject;
+}(GameObject));
+var CakeGameObject = /** @class */ (function (_super) {
+    __extends(CakeGameObject, _super);
+    function CakeGameObject() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    CakeGameObject.prototype.render = function () {
+        if (collisionDetection(player, this)) {
+            this.remove();
+        }
+        if (this.y >= canvas.height) {
+            this.destroy();
+        }
+        this.y += 3;
+        context.drawImage(this.getSprite(), this.x, this.y, this.w, this.h);
+    };
+    CakeGameObject.prototype.remove = function () {
+        playAudioById(cakeAudioElements[randomX(cakeAudioElements.length)]);
+        game.incrementScores();
+        this.destroy();
+    };
+    CakeGameObject.prototype.destroy = function () {
+        subjects.splice(subjects.indexOf(this), 1);
+    };
+    return CakeGameObject;
+}(GameObject));
+var TimerGameObject = /** @class */ (function (_super) {
+    __extends(TimerGameObject, _super);
+    function TimerGameObject() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    TimerGameObject.prototype.render = function () {
+        if (collisionDetection(player, this)) {
+            this.remove();
+        }
+        if (this.y >= canvas.height) {
+            this.destroy();
+        }
+        this.y += 3;
+        context.drawImage(this.getSprite(), this.x, this.y, this.w, this.h);
+    };
+    TimerGameObject.prototype.remove = function () {
+        player.slow(3000);
+        playAudioById('oh');
+        this.destroy();
+    };
+    return TimerGameObject;
+}(CakeGameObject));
+var BombGameObject = /** @class */ (function (_super) {
+    __extends(BombGameObject, _super);
+    function BombGameObject() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    BombGameObject.prototype.render = function () {
+    };
+    return BombGameObject;
 }(GameObject));

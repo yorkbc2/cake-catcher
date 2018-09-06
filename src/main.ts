@@ -5,13 +5,21 @@ var background: any;
 var ground: any;
 var game: GameCore;
 var platforms: GameObject[] = [];
+var subjects: GameObject[] = [];
+var cakeAudioElements = ['mhm', 'crumple', 'yummy'];
 
 var gameSprites = {
     player: 'sprites/player.png',
     player_reversed: 'sprites/player_flipped.png',
     background: 'sprites/background.jpg',
     ground: 'sprites/ground.png',
-    platform: 'sprites/platform.png'
+    platform: 'sprites/platform.png',
+    subjects: [
+        'sprites/cake.png',
+        'sprites/donut.png',
+        'sprites/cake_2.png'
+    ],
+    timer: 'sprites/timer.png'
 }
 
 var playerDirections = {
@@ -25,9 +33,7 @@ function setup() {
     canvas = <HTMLCanvasElement>document.querySelector('#game');
     context = <CanvasRenderingContext2D>canvas.getContext('2d');
 
-    game = new GameCore();
-
-    player = new PlayerGameObject(0, canvas.height - 200 ,60,70);
+    player = new PlayerGameObject(canvas.width/2-25, canvas.height - 200 ,50 ,70);
     player.setSprite(gameSprites.player, gameSprites.player_reversed);
 
     background = new GameObject(0, 0, canvas.width, canvas.height);
@@ -43,6 +49,22 @@ function setup() {
     }())
 
     platforms.push(<GameObject>createPlatform(gameSprites.platform, canvas.width - 160, canvas.height - 180, 160, 40));
+    setInterval(() => {
+        subjects.push(createSubject());
+    }, 2000);
+    setInterval(() => {
+        if (randomX(2) === 1) {
+            subjects.push(createTimer());
+        }
+        
+    }, 3000);
+
+    game = new GameCore();
+    game.onIncrementScores((scores:number) => {
+        if (scores % 4 === 0 && player.s >= 1.4) {
+            player.s -= 0.4;
+        }
+    });
 
     window.onkeydown = (e) => {
         player.changeMovingDirection((playerDirections[e.keyCode] || null));
@@ -62,6 +84,7 @@ function loop() {
     ground.render();
     platforms.map(p => p.render());
     player.render();
+    subjects.map(s => s.render());
     game.drawScores();
 }
 

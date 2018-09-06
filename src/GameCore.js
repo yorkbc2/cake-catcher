@@ -4,7 +4,12 @@ var GameCore = /** @class */ (function () {
         this.scores = 0;
         this.hearts = 3;
         this.loop = null;
+        this.onincscores = null;
     }
+    GameCore.prototype.onIncrementScores = function (cb) {
+        this.onincscores = typeof cb === 'function' ? cb : null;
+        return this;
+    };
     GameCore.prototype.decrementHearts = function () {
         this.hearts -= 1;
         if (this.hearts === 0) {
@@ -13,6 +18,8 @@ var GameCore = /** @class */ (function () {
     };
     GameCore.prototype.incrementScores = function () {
         this.scores += 1;
+        if (typeof this.onincscores === 'function')
+            this.onincscores(this.scores);
         return this;
     };
     GameCore.prototype.drawScores = function () {

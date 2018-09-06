@@ -8,6 +8,12 @@ class GameCore implements IGameCore{
     scores: number = 0;
     hearts: number = 3;
     loop: any = null;
+    onincscores: Function|null = null;
+
+    onIncrementScores(cb:Function) {
+        this.onincscores = typeof cb === 'function'? cb: null;
+        return this;
+    }
 
     decrementHearts() {
         this.hearts -= 1;
@@ -18,6 +24,7 @@ class GameCore implements IGameCore{
 
     incrementScores() {
         this.scores += 1;
+        if (typeof this.onincscores === 'function') this.onincscores(this.scores);
         return this;
     }
 
