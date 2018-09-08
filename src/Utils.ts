@@ -53,6 +53,15 @@ const createTimer = () => {
     return new TimerGameObject(randomX(canvas.width - 22.5), -60, 45,50, gameSprites.timer);
 }
 
+const createRocket = () => {
+    return (function () {
+        var sprite: any = gameSprites.rockets.getRandom(randomX(3));
+        var rocket =  new RocketGameObject(0,0,40,20,sprite.img);
+        rocket.setPosition(sprite.pos);
+        return rocket;
+    }())
+}
+
 const playAudioById = (id: string):void => {
     (<HTMLAudioElement>document.getElementById(id)).play();
 }

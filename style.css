@@ -1,0 +1,100 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #222;
+    font-family: "Helvetica", sans-serif;
+    color: #fff;
+}   
+nav {
+    padding: 10px 15px;
+    display: flex;
+    position: relative;
+    background: #111;
+    box-shadow: 0px 0px 12px rgba(0,0,0,0.35);
+}
+nav h4 {
+    margin: 0;
+    padding: 0;
+    font-size: 36px;
+    color: #fff;
+}
+
+nav ul {
+    margin: 12px;
+    padding: 0;
+    display: flex;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+nav ul li {
+    padding: 0 10px;
+    list-style: none;
+}
+
+.flex {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    padding: 30px 50px;
+}
+
+.flex > div {
+    flex: 1;
+    margin: 0 10px;
+}
+
+.canvas-container {
+    flex: none;
+    width: 640px;
+    margin-top: 10px;
+}
+
+.dashboard-container {
+    border: 1px solid #111;
+    padding: 0;
+}
+
+.dashboard-container ol {
+    margin: 0 50px;
+    padding: 10px 20px;
+}
+
+.dashboard-container ol li {
+    font-size: 22px;
+    margin-bottom: 5px;
+}
+
+.dashboard-container h2 {
+    padding: 10px 15px;
+    text-align: center;
+    margin: 0;
+    background-color: #111;
+    color: #fff;
+}
+
+.control-panel {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 0 50px;
+    background-color: #111;
+}
+
+.control-panel > div {
+    display: block;
+    flex: 1;
+    padding: 20px;
+    text-align: center;
+    min-width: 33%;
+}
+
+.control-element > img {
+    transform: translateY(20%);
+}

@@ -58,9 +58,11 @@
     // "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
   },
   "files": [
+    "src/Functions.ts",
     "src/Utils.ts",
     "src/GameCore.ts",
     "src/GameObjects.ts",
+    "src/Dashboard.ts",
     "src/main.ts"
   ]
 }

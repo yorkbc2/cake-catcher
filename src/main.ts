@@ -7,20 +7,41 @@ var game: GameCore;
 var platforms: GameObject[] = [];
 var subjects: GameObject[] = [];
 var cakeAudioElements = ['mhm', 'crumple', 'yummy'];
-
+var rocketPositions = ['TOP', 'LEFT', 'RIGHT'];
+var rockets: GameObject[] = [];
+var dashboard: Dashboard;
+var rocketLoop: number;
+var subjectLoop: Array<any> = [];
 var gameSprites = {
     player: 'sprites/player.png',
     player_reversed: 'sprites/player_flipped.png',
     background: 'sprites/background.jpg',
     ground: 'sprites/ground.png',
     platform: 'sprites/platform.png',
+    heart: 'sprites/heart.png',
     subjects: [
         'sprites/cake.png',
         'sprites/donut.png',
         'sprites/cake_2.png'
     ],
-    timer: 'sprites/timer.png'
+    timer: 'sprites/timer.png',
+    rockets: {
+        getRandom: function (r:number) {
+            switch (r) {
+                case 0: 
+                    return {pos: "TOP", img: this.TOP};
+                case 1:
+                    return {pos: "LEFT", img: this.LEFT};
+                case 2: 
+                    return {pos: "RIGHT", img: this.RIGHT};
+            }
+        },
+        TOP: 'sprites/rocket_down.png',
+        LEFT: 'sprites/rocket_right.png',
+        RIGHT: 'sprites/rocket_left.png'
+    }
 }
+
 
 var playerDirections = {
     [ARROW_RIGHT]: 0,
@@ -30,6 +51,8 @@ var playerDirections = {
 }
 
 function setup() {
+    dashboard = new Dashboard();
+    dashboard.getRecords();
     canvas = <HTMLCanvasElement>document.querySelector('#game');
     context = <CanvasRenderingContext2D>canvas.getContext('2d');
 
@@ -42,40 +65,13 @@ function setup() {
     ground = new GameObject(0, canvas.height - 40, canvas.width, 100);
     ground.setSprite(gameSprites.ground);
 
-    platforms.push(function () {
-        var platform = new GameObject(0, canvas.height - 150, 160, 40);
-        platform.setSprite(gameSprites.platform);
-        return platform;
-    }())
-
-    platforms.push(<GameObject>createPlatform(gameSprites.platform, canvas.width - 160, canvas.height - 180, 160, 40));
-    setInterval(() => {
-        subjects.push(createSubject());
-    }, 2000);
-    setInterval(() => {
-        if (randomX(2) === 1) {
-            subjects.push(createTimer());
-        }
-        
-    }, 3000);
-
     game = new GameCore();
     game.onIncrementScores((scores:number) => {
         if (scores % 4 === 0 && player.s >= 1.4) {
             player.s -= 0.4;
         }
     });
-
-    window.onkeydown = (e) => {
-        player.changeMovingDirection((playerDirections[e.keyCode] || null));
-        player.startToMove();
-    }
-
-    window.onkeyup = (e) => {
-        player.stopToMove();
-    }
-
-    game.setLoop(setInterval(loop, 1000/60));
+    game.preview();
 }  
 
 function loop() {
@@ -85,6 +81,8 @@ function loop() {
     platforms.map(p => p.render());
     player.render();
     subjects.map(s => s.render());
+    rockets.map(r => r.render());
+    game.drawHearts();
     game.drawScores();
 }
 

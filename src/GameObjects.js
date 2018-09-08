@@ -192,12 +192,56 @@ var TimerGameObject = /** @class */ (function (_super) {
     };
     return TimerGameObject;
 }(CakeGameObject));
-var BombGameObject = /** @class */ (function (_super) {
-    __extends(BombGameObject, _super);
-    function BombGameObject() {
-        return _super !== null && _super.apply(this, arguments) || this;
+var RocketGameObject = /** @class */ (function (_super) {
+    __extends(RocketGameObject, _super);
+    function RocketGameObject() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.xd = 0;
+        _this.yd = 0;
+        return _this;
     }
-    BombGameObject.prototype.render = function () {
+    RocketGameObject.prototype.render = function () {
+        if (collisionDetection(player, this)) {
+            this.remove();
+        }
+        if (this.x <= 0 || this.x >= canvas.width ||
+            this.y + this.h >= canvas.height) {
+            this.destroy();
+        }
+        this.x += this.xd;
+        this.y += this.yd;
+        context.drawImage(this.sprite, this.x, this.y, this.w, this.h);
     };
-    return BombGameObject;
-}(GameObject));
+    RocketGameObject.prototype.setPosition = function (pos) {
+        if (pos === void 0) { pos = "TOP"; }
+        switch (pos) {
+            case "TOP":
+                this.x = randomX(canvas.width - 30);
+                this.y = -60;
+                this.xd = 0;
+                this.yd = 2;
+                this.w = 30;
+                this.h = 50;
+                break;
+            case "LEFT":
+                this.x = -60;
+                this.y = randomX(canvas.height) + 20;
+                this.xd = 2;
+                this.yd = 0;
+                break;
+            case "RIGHT":
+                this.x = canvas.width + 60;
+                this.y = randomX(canvas.height) + 20;
+                this.xd = -2;
+                this.yd = 0;
+        }
+    };
+    RocketGameObject.prototype.remove = function () {
+        this.destroy();
+        game.decrementHearts();
+    };
+    RocketGameObject.prototype.destroy = function () {
+        rockets.splice(rockets.indexOf(this), 1);
+    };
+    return RocketGameObject;
+}(CakeGameObject));

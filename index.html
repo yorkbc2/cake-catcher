@@ -5,39 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Cake Catcher 2D</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-        }
-        nav {
-            padding: 10px 15px;
-            display: flex;
-            position: relative;
-            box-shadow: 0px 0px 12px rgba(0,0,0,0.35);
-        }
-        nav h4 {
-            margin: 0;
-            padding: 0;
-            font-size: 48px;
-        }
-
-        nav ul {
-            margin: 23px;
-            padding: 0;
-            display: flex;
-        }
-
-        nav ul li a {
-            color: #000;
-            font-size: 18px;
-        }
-
-        nav ul li {
-            padding: 0 10px;
-            list-style: none;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
     <div id="root">
@@ -46,15 +14,50 @@
                 CakeCatcher
             </h4>
             <ul>
-                <li><a href="#">Донат</a></li>
+                <li><a href="https://instagram.com/alexyorke.io">Автор</a></li>
             </ul>
         </nav>
-        <canvas id="game" width="640" height="400" style="border: 1px solid #000;"></canvas>
+        <div class="flex">
+            <div class="canvas-container">
+                <canvas id="game" width="640" height="400" style="border: 1px solid #000;"></canvas>
+            </div>
+            <div class="dashboard-container">
+                <h2>Result list:</h2>
+                <ol id="dashboard-list">
+
+                </ol>
+            </div>
+        </div>
+        <div class="control-panel">
+            <div class="control-element">
+                Arrows - Control your hero
+            </div>
+            <div class="control-element">
+                <img src="sprites/cake.png" width="auto" height="24px" />
+                <img src="sprites/cake_2.png" width="auto" height="24px" />
+                <img src="sprites/donut.png" width="auto" height="24px" />
+                <span>Collect to earn your scores</span> 
+            </div>
+            <div class="control-element">
+                <img src="sprites/timer.png" width="auto" height="24px" />
+                <span>It can make you slowly</span>
+            </div>
+            <div class="control-element">
+                <img src="sprites/rocket_right.png" width="auto" height="24px" />
+                <span>
+                    Don't touch it if you want to live
+                </span>
+            </div>
+        </div>
+        
     </div>
     <audio type="audio/wav" src="audio/crumple.wav" id="crumple" class="audio"></audio>
     <audio type="audio/wav" src="audio/oh.wav" id="oh" class="audio"></audio>
     <audio type="audio/mp3" src="audio/yummy.mp3" id="yummy" class="audio"></audio>
     <audio type="audio/mp3" src="audio/mhm.mp3" id="mhm" class="audio"></audio>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+    <script src="src/Functions.js"></script>
+    <script src="src/Dashboard.js"></script>
     <script src="src/Utils.js"></script>
     <script src="src/GameCore.js"></script>
     <script src="src/GameObjects.js"></script>

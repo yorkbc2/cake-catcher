@@ -44,6 +44,14 @@ var createSubject = function () {
 var createTimer = function () {
     return new TimerGameObject(randomX(canvas.width - 22.5), -60, 45, 50, gameSprites.timer);
 };
+var createRocket = function () {
+    return (function () {
+        var sprite = gameSprites.rockets.getRandom(randomX(3));
+        var rocket = new RocketGameObject(0, 0, 40, 20, sprite.img);
+        rocket.setPosition(sprite.pos);
+        return rocket;
+    }());
+};
 var playAudioById = function (id) {
     document.getElementById(id).play();
 };

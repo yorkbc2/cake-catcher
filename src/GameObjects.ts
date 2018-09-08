@@ -186,8 +186,49 @@ class TimerGameObject extends CakeGameObject {
     }
 }
 
-class BombGameObject extends GameObject {
+class RocketGameObject extends CakeGameObject {
+    xd: number = 0;
+    yd: number = 0;
     render() {
-        
+        if (collisionDetection(player, this)) {
+            this.remove();
+        }
+        if (this.x <= 0 || this.x >= canvas.width ||
+            this.y + this.h >= canvas.height) {
+                this.destroy();
+            }
+        this.x += this.xd;
+        this.y += this.yd;
+        context.drawImage(this.sprite, this.x, this.y, this.w, this.h);
+    }
+    setPosition(pos: string="TOP") { 
+        switch(pos) {
+            case "TOP":
+                this.x = randomX(canvas.width - 30);
+                this.y = -60;
+                this.xd = 0;
+                this.yd = 2;
+                this.w = 30;
+                this.h = 50;
+                break;
+            case "LEFT":
+                this.x = -60;
+                this.y = randomX(canvas.height) + 20;
+                this.xd = 2;
+                this.yd = 0;
+                break;
+            case "RIGHT":
+                this.x = canvas.width + 60;
+                this.y = randomX(canvas.height) + 20;
+                this.xd = -2;
+                this.yd = 0;
+        }
+    }
+    remove() {
+        this.destroy();
+        game.decrementHearts();
+    }
+    destroy() {
+        rockets.splice(rockets.indexOf(this), 1);
     }
 }
