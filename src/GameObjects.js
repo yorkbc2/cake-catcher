@@ -204,10 +204,6 @@ var RocketGameObject = /** @class */ (function (_super) {
         if (collisionDetection(player, this)) {
             this.remove();
         }
-        if (this.x <= 0 || this.x >= canvas.width ||
-            this.y + this.h >= canvas.height) {
-            this.destroy();
-        }
         this.x += this.xd;
         this.y += this.yd;
         context.drawImage(this.sprite, this.x, this.y, this.w, this.h);

@@ -7,7 +7,7 @@ interface IGameCore {
 }
 class GameCore implements IGameCore{
     scores: number = 0;
-    hearts: number = 1;
+    hearts: number = 5;
     loop: any = null;
     onincscores: Function|null = null;
 

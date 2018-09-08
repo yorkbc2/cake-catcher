@@ -2,7 +2,7 @@
 var GameCore = /** @class */ (function () {
     function GameCore() {
         this.scores = 0;
-        this.hearts = 1;
+        this.hearts = 5;
         this.loop = null;
         this.onincscores = null;
     }
